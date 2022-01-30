@@ -4,7 +4,7 @@
 //Globals
 
 #define WIN_SIZE 524
-#define METHOD GL_LINE_LOOP
+#define METHOD GL_TRIANGLE_FAN
 
 //Vertex Obj
 //Manipulators
@@ -30,7 +30,8 @@ int main( int argc, char **argv ) {
   program.StartInitialization(argc, argv);
 
   Buffer pipeBuffer(0, 0);
-  Pipe pipeline(&pipeBuffer, thetaLoc);
+  Object pipeObject(CUBE);
+  Pipe pipeline(&pipeBuffer, &pipeObject, thetaLoc);
   pipeline.DrawScheme();
 
   glutDisplayFunc(DisplayWindow);
