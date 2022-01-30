@@ -10,9 +10,9 @@ static const std::string vUniform = "uTheta";
 
 //Constructors
 
-Pipe::Pipe(Buffer *_genBuffer, Object *_genObject, GLint _thetaLoc)
-  : genBuffer(_genBuffer), genObject(_genObject), vaoID(0), buffID(0), thetaLoc(_thetaLoc) {
-    genBuffer = _genBuffer; genObject = _genObject;
+Pipe::Pipe(Buffer *_genBuffer, GLint _thetaLoc)
+  : genBuffer(_genBuffer), vaoID(0), buffID(0), thetaLoc(_thetaLoc) {
+    genBuffer = _genBuffer;
     vaoID = 0; buffID = 0;
     thetaLoc = _thetaLoc;
 }
@@ -20,7 +20,6 @@ Pipe::Pipe(Buffer *_genBuffer, Object *_genObject, GLint _thetaLoc)
 //Public fields
 
 void Pipe::DrawScheme() {
-  // vec2 *vertexData = genObject->GetTarget(); //WIP
   vec2 vertexData[MAXPOINTS] = {
     vec2(.5,-.5),
     vec2(-.5),

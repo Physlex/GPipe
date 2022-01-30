@@ -7,10 +7,11 @@
 ///////////////////
 #include "Init.h"
 #include "Buffer.h"
-#include "Object.h"
 ///////////////////
 #include <Angel.h> //Extended from Angel
 ///////////////////
+
+#define MAXPOINTS 4
 
 class Pipe
 {
@@ -18,7 +19,7 @@ class Pipe
    /**
    *  Pass instantiated buffer object
    */
-   Pipe(Buffer *_genBuffer, Object *_genObject, GLint _thetaLoc);
+   Pipe(Buffer *_genBuffer, GLint _thetaLoc);
 
    /**
    *  Creates a vertex object for use in CreateBuffer and InitShader
@@ -52,7 +53,7 @@ class Pipe
    */
    void DefineUniform(GLuint progID, const char *inName);
 
-   Buffer *genBuffer; Object *genObject;
+   Buffer *genBuffer;
    GLuint vaoID; GLuint buffID;
    GLint thetaLoc;
 };

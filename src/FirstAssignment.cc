@@ -30,8 +30,7 @@ int main( int argc, char **argv ) {
   program.StartInitialization(argc, argv);
 
   Buffer pipeBuffer(0, 0);
-  Object pipeObject(CUBE);
-  Pipe pipeline(&pipeBuffer, &pipeObject, thetaLoc);
+  Pipe pipeline(&pipeBuffer, thetaLoc);
   pipeline.DrawScheme();
 
   glutDisplayFunc(DisplayWindow);
