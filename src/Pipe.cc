@@ -4,9 +4,11 @@
 
 static const std::string fshader = "shaders/fshader.glsl";
 static const std::string vshader = "shaders/vshader.glsl";
+//Must be defined in vShader
 static const std::string vInput = "vPosition";
-static const std::string vUniform = "uTheta";
+static const std::string vColour = "vColour";
 
+static const GLint DIM = 3;
 
 //Constructors
 
@@ -20,14 +22,14 @@ Pipe::Pipe(Buffer *_genBuffer, GLint _thetaLoc)
 //Public fields
 
 void Pipe::DrawScheme() {
-  vec2 vertexData[MAXPOINTS] = {
-    vec2(.5,-.5),
-    vec2(-.5),
-    vec2(-.5,.5),
-    vec2(.5),
+  vec3 points[MAXPOINTS] = {
+    vec3(0.5, 0.5, 1.0),
+    vec3(-0.5, 0.5, 1.0),
+    vec3(-0.5, -0.5, 1.0),
+    vec3(0.5, -0.5, 1.0),
   };
-  CreateBuffer(1, sizeof(vertexData), vertexData);
-  InitializeShaders();
+  CreateBuffer(1, sizeof(points), points);
+  InitializeShaders(sizeof(points));
 }
 
 void Pipe::CreateBuffer(GLuint numObjects, GLsizeiptr size, const void *data) {
@@ -36,22 +38,39 @@ void Pipe::CreateBuffer(GLuint numObjects, GLsizeiptr size, const void *data) {
   genBuffer.DefineAO(numObjects, GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 }
 
-void Pipe::InitializeShaders() {
-  GLuint program = InitShader(vshader.c_str(), fshader.c_str());
-  glUseProgram(program);
-  DefineAttribute(program, vInput.c_str());
-  DefineUniform(program, vUniform.c_str());
-  glClearColor(0.0, 0.0, 0.0, 1.0);
+void Pipe::CreateBuffer(GLuint numObjects, GLsizeiptr sizePoints, GLsizeiptr sizeColours, const void *vertexData, const void *colourData) {
+  Buffer genBuffer(vaoID, buffID);
+  genBuffer.DefineVAO(numObjects);
+  genBuffer.DefineAO(numObjects, GL_ARRAY_BUFFER, sizePoints, sizeColours, vertexData, colourData, GL_STATIC_DRAW);
+}
+
+void Pipe::InitializeShaders(GLsizeiptr sizePoints) {
+  progID = InitShader(vshader.c_str(), fshader.c_str());
+  DefineAttribute(vColour.c_str());
+  DefineAttribute(vInput.c_str());
+  glUseProgram(progID);
 }
 
 //Private fields
 
-void Pipe::DefineAttribute(GLuint progID, const char *inName) {
+void Pipe::DefineAttribute(const char *inName) {
   GLuint attribID = glGetAttribLocation(progID, inName);
   glEnableVertexAttribArray(attribID);
-  glVertexAttribPointer(attribID, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+  glVertexAttribPointer(attribID, DIM, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
 }
 
-void Pipe::DefineUniform(GLuint progID, const char *inName) {
+void Pipe::DefineAttribute(const char *inName, GLsizeiptr sizePoints) {
+  GLuint attribID = glGetAttribLocation(progID, inName);
+  glEnableVertexAttribArray(attribID);
+  glVertexAttribPointer(attribID, DIM, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizePoints));
+}
+
+void Pipe::DefineUniform(const char *inName) {
   thetaLoc = glGetUniformLocation(progID, inName);
+}
+
+//Get/Set methods
+
+GLuint Pipe::GetProgramID() {
+  return progID;
 }

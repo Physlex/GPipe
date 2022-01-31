@@ -28,12 +28,13 @@ void Init::StartInitialization(int argc, char **argv) {
 
 void Init::InitGlewGlut(int argc, char **argv) {
   glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
   glutInitContextVersion(3, 2);
   glutInitContextProfile(GLUT_CORE_PROFILE);
 }
 
 void Init::InitWindow() {
+  glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
+  glEnable(GL_DEPTH_TEST);
   glutInitWindowSize(x, y);
   glutCreateWindow(windowName);
   glewInit();

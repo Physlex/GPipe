@@ -21,13 +21,14 @@ class Buffer
    /**
    *  Defines the Array object holding vertex positions
    */
-   void DefineAO(
-     GLuint numObjects,
-     GLenum target,
-     GLsizeiptr size,
-     const void * data,
-     GLenum usage);
+   void DefineAO(GLuint numObjects, GLenum target, GLsizeiptr size, const void * data, GLenum usage);
+   void DefineAO(GLuint numObjects, GLenum target, GLsizeiptr sizePoints, GLsizeiptr sizeColours, const void * vertexData, const void *colourData, GLenum usage);
  private:
+   /**
+   *  Define sub-data for Array object
+   */
+   void DefineSAO(GLenum target, GLsizeiptr sizePoints, GLsizeiptr sizeColours, const void * vertexData, const void *colourData);
+
    GLuint vaoBufferID; GLuint arrayBufferID;
 };
 
