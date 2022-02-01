@@ -1,4 +1,5 @@
 #include <string>
+#include <vector>
 #include <Angel.h>
 #include "../include/Alex/Init.h"
 
@@ -6,21 +7,47 @@
 
 #define METHOD GL_TRIANGLE_FAN
 #define SQUARESIZE 4
-#define NUMOBJECTS 2
+#define NUMOBJECTS 6
 #define WIN_SIZE 524
 #define DIM 3
 
-vec3 frontFace[SQUARESIZE] = {
-  vec3(0.5, 0.5, 0.0),
-  vec3(-0.5, 0.5, 0.0),
-  vec3(-0.5, -0.5, 0.0),
-  vec3(0.5, -0.5, 0.0),
-};
-vec3 leftFace[SQUARESIZE] = {
-  vec3(0.5, 0.5, 1.0),
-  vec3(-0.5, 0.5, 1.0),
-  vec3(-0.5, -0.5, 1.0),
-  vec3(0.5, -0.5, 1.0),
+vec3 cubeFaces[NUMOBJECTS][SQUARESIZE] = {
+  {
+    vec3(-0.5, -0.5, -0.5),
+    vec3(-0.5, 0.5, -0.5),
+    vec3(0.5, 0.5, -0.5),
+    vec3(0.5, -0.5, -0.5),
+  },
+  {
+    vec3(-0.25, -0.25, 0.5),
+    vec3(-0.25, 0.25, 0.5),
+    vec3(0.25, 0.25, 0.5),
+    vec3(0.25, -0.25, 0.5),
+  },
+  {
+    vec3(-0.25, 0.25, 0.5),
+    vec3(-0.5, 0.5, -0.5),
+    vec3(-0.5, -0.5, -0.5),
+    vec3(-0.25, -0.25, 0.5),
+  },
+  {
+    vec3(0.25, -0.25, 0.5),
+    vec3(0.5, -0.5, -0.5),
+    vec3(0.5, 0.5, -0.5),
+    vec3(0.25, 0.25, 0.5),
+  },
+  {
+    vec3(-0.25, -0.25, 0.5),
+    vec3(-0.5, -0.5, -0.5),
+    vec3(0.5, -0.5, -0.5),
+    vec3(0.25, -0.25, 0.5),
+  },
+  {
+    vec3(0.25, 0.25, 0.5),
+    vec3(0.5, 0.5, -0.5),
+    vec3(-0.5, 0.5, -0.5),
+    vec3(-0.25, 0.25, 0.5),
+  },
 };
 
 GLfloat theta_x = 0.0; GLfloat theta_y = 0.0; GLfloat theta_z = 0.0;
@@ -57,30 +84,27 @@ int main(int argc, char **argv) {
   Init program(name.c_str(), WIN_SIZE);
   program.StartInitialization(argc, argv);
 
-  glGenVertexArrays(NUMOBJECTS, vaoBufferID);
-  glGenBuffers(NUMOBJECTS, objectBufferID);
-
-  glBindVertexArray(vaoBufferID[0]);
-  glBindBuffer(GL_ARRAY_BUFFER, objectBufferID[0]);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(frontFace), frontFace, GL_STATIC_DRAW);
-
-  glBindVertexArray(vaoBufferID[1]);
-  glBindBuffer(GL_ARRAY_BUFFER, objectBufferID[1]);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(leftFace), leftFace, GL_STATIC_DRAW);
-
   GLuint progID = InitShader(vshader.c_str(), fshader.c_str());
   glUseProgram(progID);
 
   modelViewLoc = glGetUniformLocation(progID, "uModelView");
   projLoc = glGetUniformLocation(progID, "uProjection");
 
-  attribID1 = glGetAttribLocation(progID, vColour.c_str());
-  glEnableVertexAttribArray(attribID1);
-  glVertexAttribPointer(attribID1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+  glGenVertexArrays(NUMOBJECTS, vaoBufferID);
+  glGenBuffers(NUMOBJECTS, objectBufferID);
 
-  attribID2 = glGetAttribLocation(progID, vInput.c_str());
-  glEnableVertexAttribArray(attribID2);
-  glVertexAttribPointer(attribID2, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+  for (int i = 0; i < NUMOBJECTS; i++) {
+    glBindVertexArray(vaoBufferID[i]);
+    glBindBuffer(GL_ARRAY_BUFFER, objectBufferID[i]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeFaces[i]), cubeFaces[i], GL_STATIC_DRAW);
+
+    attribID1 = glGetAttribLocation(progID, vColour.c_str());
+    glEnableVertexAttribArray(attribID1);
+    glVertexAttribPointer(attribID1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+    attribID2 = glGetAttribLocation(progID, vInput.c_str());
+    glEnableVertexAttribArray(attribID2);
+    glVertexAttribPointer(attribID2, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+  }
 
   glutDisplayFunc(DisplayWindow);
   glutKeyboardFunc(KeyPress);
@@ -107,7 +131,6 @@ void DisplayWindow(void) {
 
   for (int i = 0; i < NUMOBJECTS; i++) {
     glBindVertexArray(vaoBufferID[i]);
-    glBindBuffer(GL_ARRAY_BUFFER, objectBufferID[i]);
     glDrawArrays(METHOD, 0, 4);
   }
 
