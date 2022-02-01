@@ -15,7 +15,7 @@
 
 const int MAXPOINTS = 4 * 6;
 const int SQUARESIZE = 4;
-const int NUMSIDES = 6;
+const int NUMOBJECTS = 6;
 
 class Pipe {
  public:
@@ -23,10 +23,6 @@ class Pipe {
    *  Default Constructor
    */
    Pipe();
-   /**
-   *  Pass instantiated buffer object
-   */
-   Pipe(Buffer _genBuffer);
 
    /**
    *  Creates a vertex object for use in CreateBuffer and InitShader
@@ -49,7 +45,7 @@ class Pipe {
    *  Returns the genBuffer of this
    *  @return genBuffer, buffer object
    */
-   Buffer GetBufferObject();
+   std::vector<Buffer> GetBufferObject();
 
    /**
    *  Returns the vaoID
@@ -70,7 +66,7 @@ class Pipe {
    /**
    *  Creates buffer relevant to current scheme
    */
-   void CreateBuffer(GLuint numObjects, GLsizeiptr size, const void *data);
+   void CreateBuffer(int bufferAt, GLuint numObjects, GLsizeiptr size, const void *data);
    void CreateBuffer(GLuint numObjects, GLsizeiptr sizep, GLsizeiptr sizeColours,  const void *vertexData, const void *colourData);
 
    /**
@@ -81,7 +77,7 @@ class Pipe {
    void DefineAttribute(const char *inName, GLint buffLoc = 0);
    void DefineAttribute(const char *inName, GLsizeiptr sizePoints);
 
-   Buffer genBuffer;
+   std::vector<Buffer> bufferVec;
    GLuint progID;
    GLuint vaoID;
    GLuint buffID;

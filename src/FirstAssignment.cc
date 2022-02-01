@@ -4,15 +4,44 @@
 //Globals
 
 #define WIN_SIZE 524
+#define DIM 3
 
-//Manipulators
-
-//Is this right?
+vec3 frontFace[SQUARESIZE] = {
+  vec3(0.5, 0.5, 0.0),
+  vec3(-0.5, 0.5, 0.0),
+  vec3(-0.5, -0.5, 0.0),
+  vec3(0.5, -0.5, 0.0),
+};
+vec3 leftFace[SQUARESIZE] = {
+  vec3(0.5, 0.5, 1.0),
+  vec3(-0.5, 0.5, 1.0),
+  vec3(-0.5, -0.5, 1.0),
+  vec3(0.5, -0.5, 1.0),
+};
 
 GLfloat theta_x = 0.0; GLfloat theta_y = 0.0; GLfloat theta_z = 0.0;
 GLfloat pos_x = 0.0; GLfloat pos_y = 0.0; GLfloat pos_z = 0.0;
 GLfloat scale = 1.00;
 GLuint modelViewLoc; GLuint projLoc; GLuint colourLoc;
+
+GLuint vaoBufferID1 = 0;
+GLuint objectBufferID1 = 0;
+GLuint vaoBufferID2 = 1;
+GLuint objectBufferID2 = 1;
+GLuint vaoBufferID3;
+GLuint objectBufferID3;
+GLuint vaoBufferID4;
+GLuint objectBufferID4;
+GLuint vaoBufferID5;
+GLuint objectBufferID5;
+GLuint vaoBufferID6;
+GLuint objectBufferID6;
+
+static const std::string fshader = "shaders/fshader.glsl";
+static const std::string vshader = "shaders/vshader.glsl";
+
+static const std::string vInput = "vPosition";
+static const std::string vColour = "vColour";
 
 //Names
 
@@ -22,6 +51,8 @@ static const std::string name = "Spinning Square";
 
 void KeyPress(unsigned char key, int x, int y);
 void SpecialKeyPress(int key, int x, int y);
+
+void SwapBuffer(GLuint vaoID, GLuint buffID);
 void DisplayWindow(void);
 
 //Main
@@ -30,13 +61,33 @@ int main(int argc, char **argv) {
   Init program(name.c_str(), WIN_SIZE);
   program.StartInitialization(argc, argv);
 
-  Buffer pipeBuffer;
-  Pipe pipeline(pipeBuffer);
-  pipeline.InitializeShaders();
-  pipeline.DrawScheme();
+  glGenVertexArrays(1, &vaoBufferID1);
+  glBindVertexArray(vaoBufferID1);
 
-  modelViewLoc = glGetUniformLocation(pipeline.GetProgramID(), "uModelView");
-  projLoc = glGetUniformLocation(pipeline.GetProgramID(), "uProjection");
+  glGenBuffers(1, &objectBufferID1);
+  glBindBuffer(GL_ARRAY_BUFFER, objectBufferID1);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(frontFace), frontFace, GL_STATIC_DRAW);
+
+  glGenVertexArrays(1, &vaoBufferID2);
+  glBindVertexArray(vaoBufferID2);
+
+  glGenBuffers(1, &objectBufferID2);
+  glBindBuffer(GL_ARRAY_BUFFER, objectBufferID2);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(leftFace), leftFace, GL_STATIC_DRAW);
+
+  GLuint progID = InitShader(vshader.c_str(), fshader.c_str());
+  glUseProgram(progID);
+
+  modelViewLoc = glGetUniformLocation(progID, "uModelView");
+  projLoc = glGetUniformLocation(progID, "uProjection");
+
+  GLuint attribID1 = glGetAttribLocation(progID, vColour.c_str());
+  glEnableVertexAttribArray(attribID1);
+  glVertexAttribPointer(attribID1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+
+  GLuint attribID2 = glGetAttribLocation(progID, vInput.c_str());
+  glEnableVertexAttribArray(attribID2);
+  glVertexAttribPointer(attribID2, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
 
   glutDisplayFunc(DisplayWindow);
   glutKeyboardFunc(KeyPress);
@@ -61,9 +112,13 @@ void DisplayWindow(void) {
   mat4 proj = Ortho(-1, 1, -1, 1, -1, 100);
   glUniformMatrix4fv(projLoc, 1, GL_TRUE, proj);
 
-  for (int i = 0; i < 2; i++) { //2 for now, it will be changed later
-    glDrawArrays(METHOD, 0, SQUARESIZE);
-  }
+  glBindVertexArray(vaoBufferID1);
+  glBindBuffer(GL_ARRAY_BUFFER, objectBufferID1);
+  glDrawArrays(METHOD, 0, 4);
+
+  glBindVertexArray(vaoBufferID2);
+  glBindBuffer(GL_ARRAY_BUFFER, objectBufferID2);
+  glDrawArrays(METHOD, 0, 4);
 
   glutSwapBuffers();
 }
