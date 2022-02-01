@@ -19,34 +19,34 @@ vec3 cubeFaces[NUMOBJECTS][SQUARESIZE] = {
     vec3(0.5, -0.5, -0.5),
   },
   {
+    vec3(0.25, -0.25, 0.5),
     vec3(-0.25, -0.25, 0.5),
     vec3(-0.25, 0.25, 0.5),
-    vec3(0.25, 0.25, 0.5),
-    vec3(0.25, -0.25, 0.5),
-  },
-  {
-    vec3(-0.25, 0.25, 0.5),
-    vec3(-0.5, 0.5, -0.5),
-    vec3(-0.5, -0.5, -0.5),
-    vec3(-0.25, -0.25, 0.5),
-  },
-  {
-    vec3(0.25, -0.25, 0.5),
-    vec3(0.5, -0.5, -0.5),
-    vec3(0.5, 0.5, -0.5),
     vec3(0.25, 0.25, 0.5),
   },
   {
     vec3(-0.25, -0.25, 0.5),
     vec3(-0.5, -0.5, -0.5),
-    vec3(0.5, -0.5, -0.5),
-    vec3(0.25, -0.25, 0.5),
+    vec3(-0.5, 0.5, -0.5),
+    vec3(-0.25, 0.25, 0.5),
   },
   {
     vec3(0.25, 0.25, 0.5),
     vec3(0.5, 0.5, -0.5),
-    vec3(-0.5, 0.5, -0.5),
+    vec3(0.5, -0.5, -0.5),
+    vec3(0.25, -0.25, 0.5),
+  },
+  {
+    vec3(0.25, -0.25, 0.5),
+    vec3(0.5, -0.5, -0.5),
+    vec3(-0.5, -0.5, -0.5),
+    vec3(-0.25, -0.25, 0.5),
+  },
+  {
     vec3(-0.25, 0.25, 0.5),
+    vec3(-0.5, 0.5, -0.5),
+    vec3(0.5, 0.5, -0.5),
+    vec3(0.25, 0.25, 0.5),
   },
 };
 
@@ -115,7 +115,10 @@ int main(int argc, char **argv) {
 }
 
 void DisplayWindow(void) {
+  glEnable(GL_DEPTH_TEST);
+  glDepthFunc(GL_LEQUAL);
   glClearColor(0.0, 0.0, 0.0, 1.0);
+  glClearDepth(1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   mat4 model = Translate(pos_x, pos_y, pos_z) * RotateX(theta_x) * RotateY(theta_y) * RotateZ(theta_z) * Scale(scale, scale, scale);

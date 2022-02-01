@@ -34,7 +34,6 @@ void Init::InitGlewGlut(int argc, char **argv) {
 
 void Init::InitWindow() {
   glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
-  glEnable(GL_DEPTH_TEST);
   glutInitWindowSize(x, y);
   glutCreateWindow(windowName);
   glewInit();
