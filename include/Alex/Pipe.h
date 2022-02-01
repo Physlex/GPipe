@@ -11,12 +11,6 @@
 #include <Angel.h> //Extended from Angel
 ///////////////////
 
-#define METHOD GL_TRIANGLE_FAN
-
-const int MAXPOINTS = 4 * 6;
-const int SQUARESIZE = 4;
-const int NUMOBJECTS = 6;
-
 class Pipe {
  public:
    /**

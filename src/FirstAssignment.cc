@@ -1,10 +1,12 @@
 #include <string>
 #include <Angel.h>
 #include "../include/Alex/Init.h"
+
 //Globals
 
 #define METHOD GL_TRIANGLE_FAN
 #define SQUARESIZE 4
+#define NUMOBJECTS 2
 #define WIN_SIZE 524
 #define DIM 3
 
@@ -26,18 +28,10 @@ GLfloat pos_x = 0.0; GLfloat pos_y = 0.0; GLfloat pos_z = 0.0;
 GLfloat scale = 1.00;
 GLuint modelViewLoc; GLuint projLoc; GLuint colourLoc;
 
-GLuint vaoBufferID1 = 0;
-GLuint objectBufferID1 = 0;
-GLuint vaoBufferID2 = 1;
-GLuint objectBufferID2 = 1;
-GLuint vaoBufferID3;
-GLuint objectBufferID3;
-GLuint vaoBufferID4;
-GLuint objectBufferID4;
-GLuint vaoBufferID5;
-GLuint objectBufferID5;
-GLuint vaoBufferID6;
-GLuint objectBufferID6;
+GLuint objectBufferID[NUMOBJECTS];
+GLuint vaoBufferID[NUMOBJECTS];
+GLuint attribID1;
+GLuint attribID2;
 
 static const std::string fshader = "shaders/fshader.glsl";
 static const std::string vshader = "shaders/vshader.glsl";
@@ -63,18 +57,15 @@ int main(int argc, char **argv) {
   Init program(name.c_str(), WIN_SIZE);
   program.StartInitialization(argc, argv);
 
-  glGenVertexArrays(1, &vaoBufferID1);
-  glBindVertexArray(vaoBufferID1);
+  glGenVertexArrays(NUMOBJECTS, vaoBufferID);
+  glGenBuffers(NUMOBJECTS, objectBufferID);
 
-  glGenBuffers(1, &objectBufferID1);
-  glBindBuffer(GL_ARRAY_BUFFER, objectBufferID1);
+  glBindVertexArray(vaoBufferID[0]);
+  glBindBuffer(GL_ARRAY_BUFFER, objectBufferID[0]);
   glBufferData(GL_ARRAY_BUFFER, sizeof(frontFace), frontFace, GL_STATIC_DRAW);
 
-  glGenVertexArrays(2, &vaoBufferID2);
-  glBindVertexArray(vaoBufferID2);
-
-  glGenBuffers(2, &objectBufferID2);
-  glBindBuffer(GL_ARRAY_BUFFER, objectBufferID2);
+  glBindVertexArray(vaoBufferID[1]);
+  glBindBuffer(GL_ARRAY_BUFFER, objectBufferID[1]);
   glBufferData(GL_ARRAY_BUFFER, sizeof(leftFace), leftFace, GL_STATIC_DRAW);
 
   GLuint progID = InitShader(vshader.c_str(), fshader.c_str());
@@ -83,11 +74,11 @@ int main(int argc, char **argv) {
   modelViewLoc = glGetUniformLocation(progID, "uModelView");
   projLoc = glGetUniformLocation(progID, "uProjection");
 
-  GLuint attribID1 = glGetAttribLocation(progID, vColour.c_str());
+  attribID1 = glGetAttribLocation(progID, vColour.c_str());
   glEnableVertexAttribArray(attribID1);
   glVertexAttribPointer(attribID1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
 
-  GLuint attribID2 = glGetAttribLocation(progID, vInput.c_str());
+  attribID2 = glGetAttribLocation(progID, vInput.c_str());
   glEnableVertexAttribArray(attribID2);
   glVertexAttribPointer(attribID2, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
 
@@ -114,13 +105,14 @@ void DisplayWindow(void) {
   mat4 proj = Ortho(-1, 1, -1, 1, -1, 100);
   glUniformMatrix4fv(projLoc, 1, GL_TRUE, proj);
 
-  glBindVertexArray(vaoBufferID1);
-  glBindBuffer(GL_ARRAY_BUFFER, objectBufferID1);
+  glBindVertexArray(vaoBufferID[0]);
+  glBindBuffer(GL_ARRAY_BUFFER, objectBufferID[0]);
   glDrawArrays(METHOD, 0, 4);
 
-  glBindVertexArray(vaoBufferID2);
-  glBindBuffer(GL_ARRAY_BUFFER, objectBufferID2);
+  glBindVertexArray(vaoBufferID[1]);
+  glBindBuffer(GL_ARRAY_BUFFER, objectBufferID[1]);
   glDrawArrays(METHOD, 0, 4);
+
 
   glutSwapBuffers();
 }
