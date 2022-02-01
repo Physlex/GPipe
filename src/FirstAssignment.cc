@@ -4,21 +4,14 @@
 //Globals
 
 #define WIN_SIZE 524
-#define METHOD GL_TRIANGLE_FAN
 
-//Vertex Obj
 //Manipulators
 
 //Is this right?
 
 GLfloat theta_x = 0.0; GLfloat theta_y = 0.0; GLfloat theta_z = 0.0;
-GLint thetaLoc;
 GLfloat pos_x = 0.0; GLfloat pos_y = 0.0; GLfloat pos_z = 0.0;
-GLfloat posLoc;
-GLfloat scale = 1.05;
-GLfloat scaleLoc;
-mat4 model;
-
+GLfloat scale = 1.00;
 GLuint modelViewLoc; GLuint projLoc; GLuint colourLoc;
 
 //Names
@@ -28,6 +21,7 @@ static const std::string name = "Spinning Square";
 //Prototypes
 
 void KeyPress(unsigned char key, int x, int y);
+void SpecialKeyPress(int key, int x, int y);
 void DisplayWindow(void);
 
 //Main
@@ -36,18 +30,17 @@ int main(int argc, char **argv) {
   Init program(name.c_str(), WIN_SIZE);
   program.StartInitialization(argc, argv);
 
-  Buffer pipeBuffer(0, 0);
-  Pipe pipeline(&pipeBuffer, thetaLoc);
+  Buffer pipeBuffer;
+  Pipe pipeline(pipeBuffer);
+  pipeline.InitializeShaders();
+  pipeline.DrawScheme();
 
-  //Is this right?
   modelViewLoc = glGetUniformLocation(pipeline.GetProgramID(), "uModelView");
   projLoc = glGetUniformLocation(pipeline.GetProgramID(), "uProjection");
 
-  //How do I draw multiple objects?
-  pipeline.DrawScheme();
-
   glutDisplayFunc(DisplayWindow);
   glutKeyboardFunc(KeyPress);
+  glutSpecialFunc(SpecialKeyPress);
 
   glutMainLoop();
   return 0;
@@ -57,10 +50,7 @@ void DisplayWindow(void) {
   glClearColor(0.0, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  //Ask about this, mainly: How? (They collapse on themselves when drawn)
-  //Is this right?
-  //Why wont the camera work?
-  //model, how exactly do I do this via the api.
+  mat4 model = Translate(pos_x, pos_y, pos_z) * RotateX(theta_x) * RotateY(theta_y) * RotateZ(theta_z) * Scale(scale, scale, scale);
   vec4 eye(0.0, -1.0, -1.0, 1.0);
   vec4 at(0.0, 0.0, 0.0, 1.0);
   vec4 up(0.0, 0.0, 1.0, 0.0);
@@ -68,42 +58,38 @@ void DisplayWindow(void) {
   mat4 modelview = view * model;
   glUniformMatrix4fv(modelViewLoc, 1, GL_TRUE, modelview);
 
-  //What even is this?
   mat4 proj = Ortho(-1, 1, -1, 1, -1, 100);
   glUniformMatrix4fv(projLoc, 1, GL_TRUE, proj);
 
-  glDrawArrays(METHOD, 0, MAXPOINTS);
-  glutSwapBuffers();
+  for (int i = 0; i < 2; i++) { //2 for now, it will be changed later
+    glDrawArrays(METHOD, 0, SQUARESIZE);
+  }
 
-  glFlush(); //Do I need this after swap buffers?
+  glutSwapBuffers();
 }
 
-//Have I set this up correctly?
-
 void PressScaleUp() {
-  if (scale != 1.05) { scale = 1.05; }
-  model *= scale;
+  scale = scale * 1.05;
   glutPostRedisplay();
 }
 
 void PressScaleDown() {
-  if (scale != 1.05) { scale = 1.05; }
-  model *= 1/scale ;
+  scale = scale / 1.05;
   glutPostRedisplay();
 }
 
 void PressRotateX() {
-  theta_x += 0.05;
+  theta_x += 0.5;
   glutPostRedisplay();
 }
 
 void PressRotateY() {
-  theta_y += 0.05;
+  theta_y += 0.5;
   glutPostRedisplay();
 }
 
 void PressRotateZ() {
-  theta_z += 0.05;
+  theta_z += 0.5;
   glutPostRedisplay();
 }
 
@@ -132,6 +118,11 @@ void KeyPress(unsigned char key, int x, int y) {
   case 033:
     exit(EXIT_SUCCESS);
     break;
+  }
+}
+
+void SpecialKeyPress(int key, int x, int y) {
+  switch (key) {
   case GLUT_KEY_RIGHT:
     PressTranslateRight();
     break;

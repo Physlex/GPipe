@@ -17,9 +17,9 @@ void Buffer::DefineVAO(GLuint numObjects) {
 }
 
 void Buffer::DefineAO(GLuint numObjects, GLenum target, GLsizeiptr size, const void * data, GLenum usage) {
-    glGenBuffers(numObjects, &arrayBufferID);
-    glBindBuffer(target, arrayBufferID);
-    glBufferData(target, size, data, usage);
+  glGenBuffers(numObjects, &arrayBufferID);
+  glBindBuffer(target, arrayBufferID);
+  glBufferData(target, size, data, usage);
 }
 
 void Buffer::DefineAO(GLuint numObjects, GLenum target, GLsizeiptr sizePoints, GLsizeiptr sizeColours, const void * vertexData, const void *colourData, GLenum usage) {

@@ -11,7 +11,7 @@ class Buffer
    *  @param vaoID, sets arrayBufferID
    *  @param buffID, sets vaoBufferID
    */
-   Buffer(GLuint vaoID, GLuint buffID);
+   Buffer(GLuint vaoID = 0, GLuint buffID = 0);
 
    /**
    *  Defines the vertex array object buffer

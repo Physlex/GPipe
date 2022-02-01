@@ -6,7 +6,7 @@ uniform mat4 uProjection;
 out vec4 vColour;
 
 void main() {
-  gl_Position = vPosition;
+  gl_Position = uProjection * uModelView * vPosition;
 
   vec4 colour[4];
   colour[0] = vec4(1.0, 0.0, 0.0, 1.0);
