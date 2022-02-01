@@ -105,14 +105,11 @@ void DisplayWindow(void) {
   mat4 proj = Ortho(-1, 1, -1, 1, -1, 100);
   glUniformMatrix4fv(projLoc, 1, GL_TRUE, proj);
 
-  glBindVertexArray(vaoBufferID[0]);
-  glBindBuffer(GL_ARRAY_BUFFER, objectBufferID[0]);
-  glDrawArrays(METHOD, 0, 4);
-
-  glBindVertexArray(vaoBufferID[1]);
-  glBindBuffer(GL_ARRAY_BUFFER, objectBufferID[1]);
-  glDrawArrays(METHOD, 0, 4);
-
+  for (int i = 0; i < NUMOBJECTS; i++) {
+    glBindVertexArray(vaoBufferID[i]);
+    glBindBuffer(GL_ARRAY_BUFFER, objectBufferID[i]);
+    glDrawArrays(METHOD, 0, 4);
+  }
 
   glutSwapBuffers();
 }
