@@ -1,8 +1,10 @@
 #include <string>
-#include "../include/Alex/Pipe.h"
-
+#include <Angel.h>
+#include "../include/Alex/Init.h"
 //Globals
 
+#define METHOD GL_TRIANGLE_FAN
+#define SQUARESIZE 4
 #define WIN_SIZE 524
 #define DIM 3
 
@@ -68,10 +70,10 @@ int main(int argc, char **argv) {
   glBindBuffer(GL_ARRAY_BUFFER, objectBufferID1);
   glBufferData(GL_ARRAY_BUFFER, sizeof(frontFace), frontFace, GL_STATIC_DRAW);
 
-  glGenVertexArrays(1, &vaoBufferID2);
+  glGenVertexArrays(2, &vaoBufferID2);
   glBindVertexArray(vaoBufferID2);
 
-  glGenBuffers(1, &objectBufferID2);
+  glGenBuffers(2, &objectBufferID2);
   glBindBuffer(GL_ARRAY_BUFFER, objectBufferID2);
   glBufferData(GL_ARRAY_BUFFER, sizeof(leftFace), leftFace, GL_STATIC_DRAW);
 
