@@ -1,5 +1,4 @@
 #include <string>
-#include <vector>
 #include <Angel.h>
 #include "../include/Alex/Init.h"
 
@@ -89,6 +88,7 @@ int main(int argc, char **argv) {
 
   modelViewLoc = glGetUniformLocation(progID, "uModelView");
   projLoc = glGetUniformLocation(progID, "uProjection");
+  colourLoc = glGetUniformLocation(progID, "uColourIndex");
 
   glGenVertexArrays(NUMOBJECTS, vaoBufferID);
   glGenBuffers(NUMOBJECTS, objectBufferID);
@@ -127,12 +127,13 @@ void DisplayWindow(void) {
   vec4 up(0.0, 0.0, 1.0, 0.0);
   mat4 view = LookAt(eye, at, up);
   mat4 modelview = view * model;
-  glUniformMatrix4fv(modelViewLoc, 1, GL_TRUE, modelview);
-
   mat4 proj = Ortho(-1, 1, -1, 1, -1, 100);
+
+  glUniformMatrix4fv(modelViewLoc, 1, GL_TRUE, modelview);
   glUniformMatrix4fv(projLoc, 1, GL_TRUE, proj);
 
   for (int i = 0; i < NUMOBJECTS; i++) {
+    glUniform1i(colourLoc, i);
     glBindVertexArray(vaoBufferID[i]);
     glDrawArrays(METHOD, 0, 4);
   }
@@ -194,6 +195,7 @@ void KeyPress(unsigned char key, int x, int y) {
 }
 
 void SpecialKeyPress(int key, int x, int y) {
+
   switch (key) {
   case GLUT_KEY_RIGHT:
     PressTranslateRight();
