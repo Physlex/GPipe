@@ -7,8 +7,10 @@ LIBS :=-lfreeglut -lglew32 -lopengl32 -lglu32
 
 SRC_DIR := src
 SRC_INCLUDE := include
-SRC_INCLUDE_2DEPTH := ${SRC_INCLUDE}/Alex
-INCLUDE := -I ${SRC_INCLUDE} -I ${SRC_INCLUDE_2DEPTH}
+SRC_INCLUDE_ALEX := ${SRC_INCLUDE}/Alex
+SRC_INCLUDE_ANGEL := ${SRC_INCLUDE}/Angel
+
+INCLUDE := -I ${SRC_INCLUDE_ANGEL} -I ${SRC_INCLUDE_ALEX}
 
 # Default target executed when no arguments are given to make.
 .DEFAULT_GOAL: all
