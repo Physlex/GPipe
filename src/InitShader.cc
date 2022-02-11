@@ -39,7 +39,7 @@ InitShader(const char* vShaderFile, const char* fShaderFile)
     };
 
     GLuint program = glCreateProgram();
-    
+
     for ( int i = 0; i < 2; ++i ) {
 	Shader& s = shaders[i];
 	s.source = readShaderSource( s.filename );

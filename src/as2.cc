@@ -1,6 +1,6 @@
 #include <string>
 #include <Angel.h>
-#include "../include/Alex/Init.h"
+#include "Init.h"
 
 //Globals
 
