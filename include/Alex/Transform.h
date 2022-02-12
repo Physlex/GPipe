@@ -19,7 +19,7 @@ namespace Al {
      * Constructor,
      * Creates a transform from a translation, rotation and scale matrix
      */
-     Transform(Al::Translation transMat, Al::Rotation rotMat, Al::Scale scaleMat);
+     Transform(Al::Rotation _rotMat, Al::Translation _transMat, Al::Scale _scaleMat);
 
      /**
      * Mutator,
@@ -43,7 +43,7 @@ namespace Al {
      * Mutator,
      * Updates scale matrix
      */
-     void UpdateScaleMatrix(Al::Location newSca);
+     void UpdateScale(Al::Scale newSca);
 
      /**
      * Extractor,
@@ -51,7 +51,9 @@ namespace Al {
      */
      mat4 GetTransform();
    private:
-     mat4 modelMat;
+     Al::Rotation rotMat;
+     Al::Translation transMat;
+     Al::Scale scaleMat;
   };
 }
 #endif

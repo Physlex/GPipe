@@ -14,6 +14,17 @@ namespace Al {
      *  Creates a translation matrix from scalars
      */
      Translation(GLfloat _posX, GLfloat _posY, GLfloat _posZ);
+     /**
+     * Mutator,
+     * Updates the transMatrix via scalars
+     */
+     void UpdateTranslation(GLfloat newX, GLfloat newY, GLfloat newZ);
+
+     /**
+     * Extractor,
+     * @return transMatrix
+     */
+     mat4 GetTransMatrix();
    private:
      GLfloat posX;
      GLfloat posY;
