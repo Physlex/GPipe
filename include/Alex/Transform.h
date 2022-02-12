@@ -22,6 +22,30 @@ namespace Al {
      Transform(Al::Translation transMat, Al::Rotation rotMat, Al::Scale scaleMat);
 
      /**
+     * Mutator,
+     * Updates all params in transform
+     */
+     void UpdateAll(Al::Rotation newRot, Al::Translation newTrans, Al::Scale newScale);
+
+     /**
+     * Mutator,
+     * Updates rotation matrix
+     */
+     void UpdateRotation(Al::Rotation newRot);
+
+     /**
+     * Mutator,
+     * Updates location matrix
+     */
+     void UpdateLocation(Al::Translation newLoc);
+
+     /**
+     * Mutator,
+     * Updates scale matrix
+     */
+     void UpdateScaleMatrix(Al::Location newSca);
+
+     /**
      * Extractor,
      * Returns the current value of modelMat
      */

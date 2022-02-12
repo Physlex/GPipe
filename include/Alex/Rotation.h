@@ -11,9 +11,25 @@ namespace Al {
    public:
      /**
      * Constructor,
-     * Defines a rotation matrix via scalars
+     * @details Defines a rotation matrix via scalars
      */
      Rotation(GLfloat _thetaX, GLfloat _thetaY, GLfloat _thetaZ);
+
+     /**
+     * Mutator,
+     * @details Updates the current rotation theta by some input
+     * @param newX, new thetaX
+     * @param newY, new thetaY
+     * @param newZ, new thetaZ
+     */
+     void UpdateRotation(GLfloat newX, GLfloat newY, GLfloat newZ);
+
+     /**
+     * Extractor,
+     * @details returns the current rotation matrix
+     * @return rotMatrix
+     */
+     mat4 GetRotationMatrix();
    private:
      GLfloat thetaX;
      GLfloat thetaY;
