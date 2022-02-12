@@ -37,7 +37,7 @@ namespace Al {
      * Mutator,
      * Updates location matrix
      */
-     void UpdateLocation(Al::Translation newLoc);
+     void UpdateTranslation(Al::Translation newLoc);
 
      /**
      * Mutator,

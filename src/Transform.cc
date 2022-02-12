@@ -13,7 +13,7 @@ Al::Transform::Transform(Al::Rotation _rotMat, Al::Translation _translationMat, 
 
 void Al::Transform::UpdateAll(Al::Rotation newRot, Al::Translation translationMat, Al::Scale newSca) {
   UpdateRotation(newRot);
-  UpdateLocation(translationMat);
+  UpdateTranslation(translationMat);
   UpdateScale(newSca);
 }
 
@@ -21,7 +21,7 @@ void Al::Transform::UpdateRotation(Al::Rotation newRot) {
   rotMat = newRot;
 }
 
-void Al::Transform::UpdateLocation(Al::Translation newLoc) {
+void Al::Transform::UpdateTranslation(Al::Translation newLoc) {
   translationMat = newLoc;
 }
 

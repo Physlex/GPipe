@@ -61,6 +61,7 @@ GLuint vaoBufferID[NUMOBJECTS];
 Al::Rotation frotation(0.0, 0.0, 0.0);
 Al::Translation ftranslation(0.0, 0.0, 0.0);
 Al::Scale fscale(1.0, 1.0, 1.0);
+
 Al::Transform frustrum(frotation, ftranslation, fscale);
 
 //Shader Data
@@ -77,6 +78,7 @@ GLuint colourLoc;
 
 enum CameraState { PERSPECTIVE, PARALLEL };
 CameraState currCamState = PARALLEL;
+
 GLuint modelViewLoc; GLuint projLoc;
 mat4 proj;
 
@@ -133,16 +135,21 @@ void DisplayWindow(void) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   mat4 model = frustrum.GetTransform();
-  vec4 eye(0.0, -1.0, 0.0, 1.0);
+  vec4 eye(0.0, 1.0, 2.0, 1.0);
   vec4 at(0.0, 0.0, 0.0, 1.0);
   vec4 up(0.0, 0.0, 1.0, 0.0);
   mat4 view = LookAt(eye, at, up);
   mat4 modelview = view * model;
 
-  if (currCamState == PERSPECTIVE) {
-    proj = Perspective(90, 1, -1, 100);
-  } else if (currCamState == PARALLEL) {
-    proj = Ortho(-1, 1, -1, 1, -1, 100);
+  switch (currCamState) {
+    case PARALLEL:
+    proj = Ortho(-1, 1, -1, 1, 1, 100);
+    break;
+    case PERSPECTIVE:
+    proj = Perspective(90, 1, 0.5, 100);
+    break;
+    default:
+    break;
   }
 
   glUniformMatrix4fv(modelViewLoc, 1, GL_TRUE, modelview);
@@ -166,15 +173,15 @@ void PressScaleDown() {
 }
 
 void PressRotateX() {
-  frotation.UpdateRotationX(frotation.X() + 0.5);
+  frotation.UpdateRotationX(frotation.X() + 1);
 }
 
 void PressRotateY() {
-  frotation.UpdateRotationY(frotation.Y() + 0.5);
+  frotation.UpdateRotationY(frotation.Y() + 1);
 }
 
 void PressRotateZ() {
-  frotation.UpdateRotationZ(frotation.Z() + 0.5);
+  frotation.UpdateRotationZ(frotation.Z() + 1);
 }
 
 void PressTranslateRight() {
@@ -194,10 +201,16 @@ void PressTranslateDown() {
 }
 
 void PressPerspectiveSwap() {
-  if (currCamState == PERSPECTIVE) {
-    currCamState == PARALLEL;
-  } else if (currCamState == PARALLEL) {
+  switch (currCamState) {
+    case PERSPECTIVE:
+    currCamState = PARALLEL;
+    break;
+    case PARALLEL:
+    currCamState = PERSPECTIVE;
+    break;
+    default:
     currCamState == PERSPECTIVE;
+    break;
   }
 }
 
