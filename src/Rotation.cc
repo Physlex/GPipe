@@ -10,6 +10,64 @@ Al::Rotation::Rotation(GLfloat _thetaX, GLfloat _thetaY, GLfloat _thetaZ)
   UpdateRotation(thetaX, thetaY, thetaZ);
 }
 
+///Methods
+
+Al::Rotation Al::Rotation::operator-(GLfloat factor) {
+  Al::Rotation rotTemp(thetaX, thetaY, thetaZ);
+  rotTemp -= factor;
+  return rotTemp;
+}
+
+Al::Rotation Al::Rotation::operator-=(GLfloat factor) {
+    thetaX -= factor;
+    thetaY -= factor;
+    thetaZ -= factor;
+    GetRotationMatrix();
+    return *this;
+}
+
+Al::Rotation Al::Rotation::operator+(GLfloat factor) {
+  Al::Rotation rotTemp(thetaX, thetaY, thetaZ);
+  rotTemp += factor;
+  return rotTemp;
+}
+
+Al::Rotation Al::Rotation::operator+=(GLfloat factor) {
+  thetaX += factor;
+  thetaY += factor;
+  thetaZ += factor;
+  GetRotationMatrix();
+  return *this;
+}
+
+Al::Rotation Al::Rotation::operator*(GLfloat factor) {
+  Al::Rotation rotTemp(thetaX, thetaY, thetaZ);
+  rotTemp *= factor;
+  return rotTemp;
+}
+
+Al::Rotation Al::Rotation::operator*=(GLfloat factor) {
+  thetaX *= factor;
+  thetaY *= factor;
+  thetaZ *= factor;
+  GetRotationMatrix();
+  return *this;
+}
+
+Al::Rotation Al::Rotation::operator/(GLfloat factor) {
+  Al::Rotation rotTemp(thetaX, thetaY, thetaZ);
+  rotTemp /= factor;
+  return rotTemp;
+}
+
+Al::Rotation Al::Rotation::operator/=(GLfloat factor) {
+  thetaX /= factor;
+  thetaY /= factor;
+  thetaZ /= factor;
+  GetRotationMatrix();
+  return *this;
+}
+
 ///Mutators/Extractors
 
 void Al::Rotation::UpdateRotation(GLfloat newX, GLfloat newY, GLfloat newZ) {
@@ -36,6 +94,18 @@ void Al::Rotation::UpdateRotationZ(GLfloat newZ) {
 
 mat4 Al::Rotation::GetRotationMatrix() {
   return rotMatrix;
+}
+
+GLfloat Al::Rotation::X() {
+  return thetaX;
+}
+
+GLfloat Al::Rotation::Y() {
+  return thetaY;
+}
+
+GLfloat Al::Rotation::Z() {
+  return thetaZ;
 }
 
 ///Helpers

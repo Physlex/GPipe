@@ -16,6 +16,21 @@ namespace Al {
      Rotation(GLfloat _thetaX, GLfloat _thetaY, GLfloat _thetaZ);
 
      /**
+     * Methods,
+     * @details constructs a new matrix via the operator type
+     * @param factor, the factor you scale by
+     */
+     Rotation operator+(GLfloat factor);
+     Rotation operator+=(GLfloat factor);
+     Rotation operator-(GLfloat factor);
+     Rotation operator-=(GLfloat factor);
+
+     Rotation operator*(GLfloat factor);
+     Rotation operator*=(GLfloat factor);
+     Rotation operator/(GLfloat factor);
+     Rotation operator/=(GLfloat factor);
+
+     /**
      * Mutator,
      * @details Updates the current rotation theta by some input
      * @param newX, new thetaX
@@ -51,6 +66,28 @@ namespace Al {
      * @return rotMatrix
      */
      mat4 GetRotationMatrix();
+
+     /**
+     * Extractor,
+     * @details returns the current value of thetaX
+     * @retunr thetaX
+     */
+     GLfloat X();
+
+     /**
+     * Extractor,
+     * @details returns the current value of thetaY
+     * @retunr thetaY
+     */
+     GLfloat Y();
+
+     /**
+     * Extractor,
+     * @details returns the current value of thetaZ
+     * @retunr thetaZ
+     */
+     GLfloat Z();
+
    private:
      /**
      * Helper,

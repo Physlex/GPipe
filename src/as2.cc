@@ -55,9 +55,7 @@ Al::Translation ftranslation(0.0, 0.0, 0.0);
 Al::Scale fscale(1.0, 1.0, 1.0);
 Al::Transform frustrum(frotation, ftranslation, fscale);
 
-GLfloat theta_x = 0.0; GLfloat theta_y = 0.0; GLfloat theta_z = 0.0;
 GLfloat pos_x = 0.0; GLfloat pos_y = 0.0; GLfloat pos_z = 0.0;
-GLfloat scale = 1.00;
 GLuint modelViewLoc; GLuint projLoc; GLuint colourLoc;
 
 GLuint objectBufferID[NUMOBJECTS];
@@ -127,13 +125,13 @@ void DisplayWindow(void) {
   glClearDepth(1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  mat4 model = Translate(pos_x, pos_y, pos_z) * RotateX(theta_x) * RotateY(theta_y) * RotateZ(theta_z) * Scale(scale, scale, scale);
+  // mat4 model = Translate(pos_x, pos_y, pos_z) * RotateX(theta_x) * RotateY(theta_y) * RotateZ(theta_z) * Scale(scale, scale, scale);
   mat4 model2 = frustrum.GetTransform();
   vec4 eye(0.0, -1.0, -1.0, 1.0);
   vec4 at(0.0, 0.0, 0.0, 1.0);
   vec4 up(0.0, 0.0, 1.0, 0.0);
   mat4 view = LookAt(eye, at, up);
-  mat4 modelview = view * model;
+  mat4 modelview = view * model2;
   mat4 proj = Ortho(-1, 1, -1, 1, -1, 100);
 
   glUniformMatrix4fv(modelViewLoc, 1, GL_TRUE, modelview);
@@ -149,50 +147,39 @@ void DisplayWindow(void) {
 }
 
 void PressScaleUp() {
-  scale = scale * 1.05;
-  frustrum.UpdateScale(fscale * 1.05);
-  glutPostRedisplay();
+  fscale *= 1.05;
 }
 
 void PressScaleDown() {
-  scale = scale / 1.05;
-  frustrum.UpdateScale(fscale / 1.05);
-  glutPostRedisplay();
+  fscale /= 1.05;
 }
 
 void PressRotateX() {
-  theta_x += 0.5;
-  glutPostRedisplay();
+  frotation.UpdateRotationX(frotation.X() + 0.5);
 }
 
 void PressRotateY() {
-  theta_y += 0.5;
-  glutPostRedisplay();
+  frotation.UpdateRotationY(frotation.Y() + 0.5);
 }
 
 void PressRotateZ() {
-  theta_z += 0.5;
-  glutPostRedisplay();
+  frotation.UpdateRotationZ(frotation.Z() + 0.5);
 }
 
 void PressTranslateRight() {
   pos_x += 0.05;
-  glutPostRedisplay();
 }
 
 void PressTranslateLeft() {
   pos_x -= 0.05;
-  glutPostRedisplay();
 }
 
 void PressTranslateUp() {
   pos_z += 0.05;
-  glutPostRedisplay();
 }
 
 void PressTranslateDown() {
   pos_z -= 0.05;
-  glutPostRedisplay();
 }
 
 void KeyPress(unsigned char key, int x, int y) {
@@ -201,10 +188,12 @@ void KeyPress(unsigned char key, int x, int y) {
     exit(EXIT_SUCCESS);
     break;
   }
+
+  glutPostRedisplay();
+  frustrum.UpdateAll(frotation, ftranslation, fscale);
 }
 
 void SpecialKeyPress(int key, int x, int y) {
-
   switch (key) {
   case GLUT_KEY_RIGHT:
     PressTranslateRight();
@@ -234,4 +223,7 @@ void SpecialKeyPress(int key, int x, int y) {
     PressRotateZ();
     break;
   }
+
+  glutPostRedisplay();
+  frustrum.UpdateAll(frotation, ftranslation, fscale);
 }

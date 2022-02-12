@@ -16,59 +16,18 @@ namespace Al {
     Scale(GLfloat _scaleX, GLfloat _scaleY, GLfloat _scaleZ);
 
     /**
-    * Method,
-    * @details constructs a new matrix and doesnt affect the current
+    * Methods,
+    * @details constructs a new matrix via the operator type
     * @param factor, the factor you scale by
     */
     Scale operator-(GLfloat factor);
-
-    /**
-    * Method,
-    * @details constructs a new matrix, scaled by the factor value
-    * @param factor, the factor you scale all by
-    */
     Scale operator-=(GLfloat factor);
-
-    /**
-    * Method,
-    * @details constructs a new matrix and doesnt affect the current
-    * @param factor, the factor you scale by
-    */
     Scale operator+(GLfloat factor);
-
-    /**
-    * Method,
-    * @details constructs a new matrix, scaled by the factor value
-    * @param factor, the factor you scale all by
-    */
     Scale operator+=(GLfloat factor);
 
-    /**
-    * Method,
-    * @details constructs a new matrix and doesnt affect the current
-    * @param factor, the factor you scale by
-    */
     Scale operator*(GLfloat factor);
-
-    /**
-    * Method,
-    * @details constructs a new matrix, scaled by the factor value
-    * @param factor, the factor you scale all by
-    */
     Scale operator*=(GLfloat factor);
-
-    /**
-    * Method,
-    * @details constructs a new matrix and doesnt affect the current
-    * @param factor, the factor you scale by
-    */
     Scale operator/(GLfloat factor);
-
-    /**
-    * Method,
-    * @details constructs a new matrix, scaled by the factor value
-    * @param factor, the factor you scale all by
-    */
     Scale operator/=(GLfloat factor);
 
     /**
