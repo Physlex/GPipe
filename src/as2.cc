@@ -5,11 +5,14 @@
 
 //Globals
 
+static const std::string name = "Spinning Square";
 #define METHOD GL_TRIANGLE_FAN
 #define SQUARESIZE 4
 #define NUMOBJECTS 6
 #define WIN_SIZE 524
 #define DIM 3
+
+//Currently Rendered object's vertex data
 
 vec3 cubeFaces[NUMOBJECTS][SQUARESIZE] = {
   {
@@ -50,27 +53,32 @@ vec3 cubeFaces[NUMOBJECTS][SQUARESIZE] = {
   },
 };
 
+GLuint objectBufferID[NUMOBJECTS];
+GLuint vaoBufferID[NUMOBJECTS];
+
+//Object Data
+
 Al::Rotation frotation(0.0, 0.0, 0.0);
 Al::Translation ftranslation(0.0, 0.0, 0.0);
 Al::Scale fscale(1.0, 1.0, 1.0);
 Al::Transform frustrum(frotation, ftranslation, fscale);
 
-GLuint modelViewLoc; GLuint projLoc; GLuint colourLoc;
-
-GLuint objectBufferID[NUMOBJECTS];
-GLuint vaoBufferID[NUMOBJECTS];
-GLuint attribID1;
-GLuint attribID2;
+//Shader Data
 
 static const std::string fshader = "shaders/fshader.glsl";
 static const std::string vshader = "shaders/vshader.glsl";
-
 static const std::string vInput = "vPosition";
 static const std::string vColour = "vColour";
+GLuint attribID1;
+GLuint attribID2;
+GLuint colourLoc;
 
-//Names
+//Camera/Viewer Data
 
-static const std::string name = "Spinning Square";
+enum CameraState { PERSPECTIVE, PARALLEL };
+CameraState currCamState = PARALLEL;
+GLuint modelViewLoc; GLuint projLoc;
+mat4 proj;
 
 //Prototypes
 
@@ -124,14 +132,18 @@ void DisplayWindow(void) {
   glClearDepth(1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  // mat4 model = Translate(pos_x, pos_y, pos_z) * RotateX(theta_x) * RotateY(theta_y) * RotateZ(theta_z) * Scale(scale, scale, scale);
-  mat4 model2 = frustrum.GetTransform();
-  vec4 eye(0.0, -1.0, -1.0, 1.0);
+  mat4 model = frustrum.GetTransform();
+  vec4 eye(0.0, -1.0, 0.0, 1.0);
   vec4 at(0.0, 0.0, 0.0, 1.0);
   vec4 up(0.0, 0.0, 1.0, 0.0);
   mat4 view = LookAt(eye, at, up);
-  mat4 modelview = view * model2;
-  mat4 proj = Ortho(-1, 1, -1, 1, -1, 100);
+  mat4 modelview = view * model;
+
+  if (currCamState == PERSPECTIVE) {
+    proj = Perspective(90, 1, -1, 100);
+  } else if (currCamState == PARALLEL) {
+    proj = Ortho(-1, 1, -1, 1, -1, 100);
+  }
 
   glUniformMatrix4fv(modelViewLoc, 1, GL_TRUE, modelview);
   glUniformMatrix4fv(projLoc, 1, GL_TRUE, proj);
@@ -181,8 +193,19 @@ void PressTranslateDown() {
   ftranslation.UpdateTranslationY(ftranslation.Y() - 0.05);
 }
 
+void PressPerspectiveSwap() {
+  if (currCamState == PERSPECTIVE) {
+    currCamState == PARALLEL;
+  } else if (currCamState == PARALLEL) {
+    currCamState == PERSPECTIVE;
+  }
+}
+
 void KeyPress(unsigned char key, int x, int y) {
   switch (key) {
+  case 'p':
+    PressPerspectiveSwap();
+    break;
   case 033:
     exit(EXIT_SUCCESS);
     break;

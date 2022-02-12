@@ -37,7 +37,7 @@ namespace Al {
     * @param newY, the new version of scaleY
     * @param newZ, the new version of scaleZ
     */
-    void UpdateScale(GLfloat newX,GLfloat newY,GLfloat newZ);
+    void UpdateScale(GLfloat newX, GLfloat newY,GLfloat newZ);
 
     /**
     * Mutator,

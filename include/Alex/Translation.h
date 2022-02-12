@@ -16,6 +16,21 @@ namespace Al {
      Translation(GLfloat _posX, GLfloat _posY, GLfloat _posZ);
 
      /**
+     * Methods,
+     * @details constructs a new matrix via the operator type
+     * @param factor, the factor you scale by
+     */
+     Translation operator-(GLfloat factor);
+     Translation operator-=(GLfloat factor);
+     Translation operator+(GLfloat factor);
+     Translation operator+=(GLfloat factor);
+
+     Translation operator*(GLfloat factor);
+     Translation operator*=(GLfloat factor);
+     Translation operator/(GLfloat factor);
+     Translation operator/=(GLfloat factor);
+
+     /**
      * Mutator,
      * @details Updates the x component of translation
      * @param the newX
@@ -56,21 +71,6 @@ namespace Al {
      * @retunr posZ
      */
      GLfloat Z();
-
-     /**
-     * Methods,
-     * @details constructs a new matrix via the operator type
-     * @param factor, the factor you scale by
-     */
-     Translation operator-(GLfloat factor);
-     Translation operator-=(GLfloat factor);
-     Translation operator+(GLfloat factor);
-     Translation operator+=(GLfloat factor);
-
-     Translation operator*(GLfloat factor);
-     Translation operator*=(GLfloat factor);
-     Translation operator/(GLfloat factor);
-     Translation operator/=(GLfloat factor);
 
      /**
      * Extractor,
