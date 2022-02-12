@@ -50,9 +50,9 @@ vec3 cubeFaces[NUMOBJECTS][SQUARESIZE] = {
   },
 };
 
-Al::Rotation frotation(0, 0, 0);
-Al::Translation ftranslation(0, 0, 0);
-Al::Scale fscale(0, 0, 0);
+Al::Rotation frotation(0.0, 0.0, 0.0);
+Al::Translation ftranslation(0.0, 0.0, 0.0);
+Al::Scale fscale(1.0, 1.0, 1.0);
 Al::Transform frustrum(frotation, ftranslation, fscale);
 
 GLfloat theta_x = 0.0; GLfloat theta_y = 0.0; GLfloat theta_z = 0.0;
@@ -150,13 +150,13 @@ void DisplayWindow(void) {
 
 void PressScaleUp() {
   scale = scale * 1.05;
-  frustrum.UpdateScale(fscale);
+  frustrum.UpdateScale(fscale * 1.05);
   glutPostRedisplay();
 }
 
 void PressScaleDown() {
   scale = scale / 1.05;
-  frustrum.UpdateScale(fscale);
+  frustrum.UpdateScale(fscale / 1.05);
   glutPostRedisplay();
 }
 

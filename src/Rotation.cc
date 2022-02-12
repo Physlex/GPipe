@@ -16,9 +16,30 @@ void Al::Rotation::UpdateRotation(GLfloat newX, GLfloat newY, GLfloat newZ) {
   thetaX = newX;
   thetaY = newY;
   thetaZ = newZ;
-  rotMatrix = Angel::RotateX(thetaX) * Angel::RotateY(thetaY) * Angel::RotateZ(thetaZ);
+  UpdateMatrix();
+}
+
+void Al::Rotation::UpdateRotationX(GLfloat newX) {
+  thetaX = newX;
+  UpdateMatrix();
+}
+
+void Al::Rotation::UpdateRotationY(GLfloat newY) {
+  thetaY = newY;
+  UpdateMatrix();
+}
+
+void Al::Rotation::UpdateRotationZ(GLfloat newZ) {
+  thetaZ = newZ;
+  UpdateMatrix();
 }
 
 mat4 Al::Rotation::GetRotationMatrix() {
   return rotMatrix;
+}
+
+///Helpers
+
+void Al::Rotation::UpdateMatrix() {
+  rotMatrix = Angel::RotateX(thetaX) * Angel::RotateY(thetaY) * Angel::RotateZ(thetaZ);
 }
