@@ -15,7 +15,6 @@ void Al::Transform::UpdateAll(Al::Rotation newRot, Al::Translation translationMa
   UpdateRotation(newRot);
   UpdateLocation(translationMat);
   UpdateScale(newSca);
-
 }
 
 void Al::Transform::UpdateRotation(Al::Rotation newRot) {

@@ -55,7 +55,6 @@ Al::Translation ftranslation(0.0, 0.0, 0.0);
 Al::Scale fscale(1.0, 1.0, 1.0);
 Al::Transform frustrum(frotation, ftranslation, fscale);
 
-GLfloat pos_x = 0.0; GLfloat pos_y = 0.0; GLfloat pos_z = 0.0;
 GLuint modelViewLoc; GLuint projLoc; GLuint colourLoc;
 
 GLuint objectBufferID[NUMOBJECTS];
@@ -167,19 +166,19 @@ void PressRotateZ() {
 }
 
 void PressTranslateRight() {
-  pos_x += 0.05;
+  ftranslation.UpdateTranslationX(ftranslation.X() + 0.05);
 }
 
 void PressTranslateLeft() {
-  pos_x -= 0.05;
+  ftranslation.UpdateTranslationX(ftranslation.X() - 0.05);
 }
 
 void PressTranslateUp() {
-  pos_z += 0.05;
+  ftranslation.UpdateTranslationY(ftranslation.Y() + 0.05);
 }
 
 void PressTranslateDown() {
-  pos_z -= 0.05;
+  ftranslation.UpdateTranslationY(ftranslation.Y() - 0.05);
 }
 
 void KeyPress(unsigned char key, int x, int y) {
