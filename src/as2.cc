@@ -50,6 +50,11 @@ vec3 cubeFaces[NUMOBJECTS][SQUARESIZE] = {
   },
 };
 
+Al::Rotation frotation(0, 0, 0);
+Al::Translation ftranslation(0, 0, 0);
+Al::Scale fscale(0, 0, 0);
+Al::Transform frustrum(frotation, ftranslation, fscale);
+
 GLfloat theta_x = 0.0; GLfloat theta_y = 0.0; GLfloat theta_z = 0.0;
 GLfloat pos_x = 0.0; GLfloat pos_y = 0.0; GLfloat pos_z = 0.0;
 GLfloat scale = 1.00;
@@ -123,6 +128,7 @@ void DisplayWindow(void) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   mat4 model = Translate(pos_x, pos_y, pos_z) * RotateX(theta_x) * RotateY(theta_y) * RotateZ(theta_z) * Scale(scale, scale, scale);
+  mat4 model2 = frustrum.GetTransform();
   vec4 eye(0.0, -1.0, -1.0, 1.0);
   vec4 at(0.0, 0.0, 0.0, 1.0);
   vec4 up(0.0, 0.0, 1.0, 0.0);
@@ -144,11 +150,13 @@ void DisplayWindow(void) {
 
 void PressScaleUp() {
   scale = scale * 1.05;
+  frustrum.UpdateScale(fscale);
   glutPostRedisplay();
 }
 
 void PressScaleDown() {
   scale = scale / 1.05;
+  frustrum.UpdateScale(fscale);
   glutPostRedisplay();
 }
 

@@ -52,8 +52,9 @@ namespace Al {
      mat4 GetTransform();
    private:
      Al::Rotation rotMat;
-     Al::Translation transMat;
+     Al::Translation translationMat;
      Al::Scale scaleMat;
+     mat4 transMat;
   };
 }
 #endif
