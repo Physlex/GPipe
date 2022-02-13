@@ -1,4 +1,6 @@
 #include <string>
+#include <iostream>
+#include <cmath>
 #include "Transform.h"
 #include "Init.h"
 #include <Angel.h>
@@ -76,9 +78,16 @@ GLuint colourLoc;
 
 //Camera/Viewer Data
 
+Al::Translation ctranslation(0.0, -1.0, 0.0);
+
+double conversion =  M_PI/180;
+double radians = 0.2;
+double degreeConverted = radians / conversion;
+
+Al::Rotation crotation(degreeConverted, 0.0, 0.0);
+
 enum CameraState { PERSPECTIVE, PARALLEL };
 CameraState currCamState = PARALLEL;
-
 GLuint modelViewLoc; GLuint projLoc;
 mat4 proj;
 
@@ -89,6 +98,8 @@ void SpecialKeyPress(int key, int x, int y);
 
 void SwapBuffer(GLuint vaoID, GLuint buffID);
 void DisplayWindow(void);
+
+void MouseFunction(int button, int state, int x, int y);
 
 //Main
 
@@ -122,7 +133,7 @@ int main(int argc, char **argv) {
   glutDisplayFunc(DisplayWindow);
   glutKeyboardFunc(KeyPress);
   glutSpecialFunc(SpecialKeyPress);
-
+  glutMouseFunc(MouseFunction);
   glutMainLoop();
   return 0;
 }
@@ -135,20 +146,19 @@ void DisplayWindow(void) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   mat4 model = frustrum.GetTransform();
-  vec4 eye(0.0, 1.0, 2.0, 1.0);
+  vec4 eye(0.0, -1.0, 0.0, 1.0);
   vec4 at(0.0, 0.0, 0.0, 1.0);
   vec4 up(0.0, 0.0, 1.0, 0.0);
-  mat4 view = LookAt(eye, at, up);
+  mat4 cameraConMat = ctranslation.GetTransMatrix() * crotation.GetRotationMatrix();
+  mat4 view = LookAt(eye, at, up) * cameraConMat;
   mat4 modelview = view * model;
 
   switch (currCamState) {
     case PARALLEL:
-    proj = Ortho(-1, 1, -1, 1, 1, 100);
+    proj = Ortho(-1, 1, -1, 1, 0.25 + ctranslation.Y(), 100);
     break;
     case PERSPECTIVE:
-    proj = Perspective(90, 1, 0.5, 100);
-    break;
-    default:
+    proj = Perspective(90, 1, 0.25 + ctranslation.Y(), 100);
     break;
   }
 
@@ -186,18 +196,22 @@ void PressRotateZ() {
 
 void PressTranslateRight() {
   ftranslation.UpdateTranslationX(ftranslation.X() + 0.05);
+
 }
 
 void PressTranslateLeft() {
   ftranslation.UpdateTranslationX(ftranslation.X() - 0.05);
+
 }
 
 void PressTranslateUp() {
   ftranslation.UpdateTranslationY(ftranslation.Y() + 0.05);
+
 }
 
 void PressTranslateDown() {
   ftranslation.UpdateTranslationY(ftranslation.Y() - 0.05);
+
 }
 
 void PressPerspectiveSwap() {
@@ -257,6 +271,56 @@ void SpecialKeyPress(int key, int x, int y) {
   case GLUT_KEY_INSERT:
     PressRotateZ();
     break;
+  }
+
+  glutPostRedisplay();
+  frustrum.UpdateAll(frotation, ftranslation, fscale);
+}
+
+void RotateCamPosXY() {
+  crotation.UpdateRotationZ(crotation.Z() + degreeConverted);
+}
+
+void RotateCamNegXY() {
+  crotation.UpdateRotationZ(crotation.Z() - degreeConverted);
+}
+
+void MWZoomIn() {
+  GLfloat prevY = ctranslation.Y();
+  ctranslation.UpdateTranslationY(ctranslation.Y() - 0.1);
+  GLfloat newY = ctranslation.Y();
+  if (newY < -1.0) {
+    ctranslation.UpdateTranslationY(prevY);
+  }
+}
+
+void MWZoomOut() {
+  GLfloat prevY = ctranslation.Y();
+  ctranslation.UpdateTranslationY(ctranslation.Y() + 0.1);
+  GLfloat newY = ctranslation.Y();
+  if (newY > 1.0) {
+    ctranslation.UpdateTranslationY(prevY);
+  }
+}
+
+void MouseFunction(int button, int state, int x, int y) {
+  switch (button) {
+    case GLUT_LEFT_BUTTON:
+      if (state == GLUT_DOWN) {
+        RotateCamPosXY();
+      }
+    break;
+    case GLUT_RIGHT_BUTTON:
+      if (state == GLUT_DOWN) {
+        RotateCamNegXY();
+      }
+    break;
+  }
+
+  if (button == 3) {
+    MWZoomIn();
+  } else if (button == 4) {
+    MWZoomOut();
   }
 
   glutPostRedisplay();

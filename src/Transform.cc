@@ -30,8 +30,8 @@ void Al::Transform::UpdateScale(Al::Scale newSca) {
 }
 
 mat4 Al::Transform::GetTransform() {
-  transMat = translationMat.GetTransMatrix()
+  transMat =    scaleMat.GetScaleMatrix()
               * rotMat.GetRotationMatrix()
-              * scaleMat.GetScaleMatrix();
+              * translationMat.GetTransMatrix();
   return transMat;
 }
