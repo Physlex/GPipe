@@ -1,9 +1,10 @@
-#include <string>
-#include <iostream>
-#include <cmath>
 #include "Transform.h"
 #include "Init.h"
 #include <Angel.h>
+#include <string>
+#include <iostream>
+#include <cmath>
+#include <algorithm>
 
 //Globals
 
@@ -78,13 +79,12 @@ GLuint colourLoc;
 
 //Camera/Viewer Data
 
-Al::Translation ctranslation(0.0, -1.0, 0.0);
-
 double conversion =  M_PI/180;
 double radians = 0.2;
 double degreeConverted = radians / conversion;
 
 Al::Rotation crotation(degreeConverted, 0.0, 0.0);
+Al::Translation ctranslation(0.0, -1.0, 0.0);
 
 enum CameraState { PERSPECTIVE, PARALLEL };
 CameraState currCamState = PARALLEL;
@@ -138,6 +138,34 @@ int main(int argc, char **argv) {
   return 0;
 }
 
+
+//Holds the error:
+mat4 GetProjection(mat4 modelView) {
+  GLfloat z1 = 1e10;
+  GLfloat z2 = -1e10;
+
+  for (int i = 0; i < NUMOBJECTS; i++) {
+    for (int j = 0; j < SQUARESIZE; j++) {
+      auto p = modelView * cubeFaces[i][j];
+      z1 = std::min(z1, p.z);
+      z2 = std::max(z2, p.z);
+    }
+  }
+  GLfloat _near;
+  GLfloat _far;
+
+  if (currCamState == PERSPECTIVE) {
+    _near = z1 - 0.01;
+    _far = z2 + 0.01;
+    return Perspective(90, 1.0, _near, _far);
+  } else if (currCamState == PARALLEL) {
+    _near = z1 - 0.5;
+    _far = z2 + 0.5;
+    return Ortho(-1.0, 1.0, -1.0, 1.0, _near, _far);
+  }
+  return 0;
+}
+
 void DisplayWindow(void) {
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LEQUAL);
@@ -153,14 +181,15 @@ void DisplayWindow(void) {
   mat4 view = LookAt(eye, at, up) * cameraConMat;
   mat4 modelview = view * model;
 
-  switch (currCamState) {
-    case PARALLEL:
-    proj = Ortho(-1, 1, -1, 1, 0.25 + ctranslation.Y(), 100);
-    break;
-    case PERSPECTIVE:
-    proj = Perspective(90, 1, 0.25 + ctranslation.Y(), 100);
-    break;
-  }
+  // switch (currCamState) {
+  //   case PARALLEL:
+  //   proj = GetProjection(modelview)//Ortho(-1, 1, -1, 1, near, far);
+  //   break;
+  //   case PERSPECTIVE:
+  //   proj = Perspective(90, 1, 1, 100);
+  //   break;
+  // }
+  proj = GetProjection(modelview);
 
   glUniformMatrix4fv(modelViewLoc, 1, GL_TRUE, modelview);
   glUniformMatrix4fv(projLoc, 1, GL_TRUE, proj);
