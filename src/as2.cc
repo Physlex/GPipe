@@ -64,7 +64,6 @@ GLuint vaoBufferID[NUMOBJECTS];
 Al::Rotation frotation(0.0, 0.0, 0.0);
 Al::Translation ftranslation(0.0, 0.0, 0.0);
 Al::Scale fscale(1.0, 1.0, 1.0);
-
 Al::Transform frustrum(frotation, ftranslation, fscale);
 
 //Shader Data
@@ -138,8 +137,7 @@ int main(int argc, char **argv) {
   return 0;
 }
 
-
-//Holds the error:
+//Holds the error: (But why?)
 mat4 GetProjection(mat4 modelView) {
   GLfloat z1 = 1e10;
   GLfloat z2 = -1e10;
@@ -147,16 +145,19 @@ mat4 GetProjection(mat4 modelView) {
   for (int i = 0; i < NUMOBJECTS; i++) {
     for (int j = 0; j < SQUARESIZE; j++) {
       auto p = modelView * cubeFaces[i][j];
-      z1 = std::min(z1, p.z);
-      z2 = std::max(z2, p.z);
+      z1 = std::min(z1, -p.z);
+      z2 = std::max(z2, -p.z);
     }
   }
   GLfloat _near;
   GLfloat _far;
 
+  /**
+  * Error: For some reason z1 and z2 are reversed only in PERSPECTIVE mode.
+  **/
   if (currCamState == PERSPECTIVE) {
-    _near = z1 - 0.01;
-    _far = z2 + 0.01;
+    _far = z1 - 0.01;
+    _near = z2 + 0.01;
     return Perspective(90, 1.0, _near, _far);
   } else if (currCamState == PARALLEL) {
     _near = z1 - 0.5;
@@ -181,14 +182,6 @@ void DisplayWindow(void) {
   mat4 view = LookAt(eye, at, up) * cameraConMat;
   mat4 modelview = view * model;
 
-  // switch (currCamState) {
-  //   case PARALLEL:
-  //   proj = GetProjection(modelview)//Ortho(-1, 1, -1, 1, near, far);
-  //   break;
-  //   case PERSPECTIVE:
-  //   proj = Perspective(90, 1, 1, 100);
-  //   break;
-  // }
   proj = GetProjection(modelview);
 
   glUniformMatrix4fv(modelViewLoc, 1, GL_TRUE, modelview);
