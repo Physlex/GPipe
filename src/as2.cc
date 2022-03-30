@@ -137,7 +137,6 @@ int main(int argc, char **argv) {
   return 0;
 }
 
-//Holds the error: (But why?)
 mat4 GetProjection(mat4 modelView) {
   GLfloat z1 = 1e10;
   GLfloat z2 = -1e10;
@@ -152,17 +151,14 @@ mat4 GetProjection(mat4 modelView) {
   GLfloat _near;
   GLfloat _far;
 
-  /**
-  * Error: For some reason z1 and z2 are reversed only in PERSPECTIVE mode.
-  **/
   if (currCamState == PERSPECTIVE) {
     _far = z1 - 0.01;
     _near = z2 + 0.01;
     return Perspective(90, 1.0, _near, _far);
   } else if (currCamState == PARALLEL) {
-    _near = z1 - 0.5;
+    _near = z1;
     _far = z2 + 0.5;
-    return Ortho(-1.0, 1.0, -1.0, 1.0, _near, _far);
+    return Ortho(-1.0, 1.0, -1.0, 1.0, _near, _far + 100);
   }
   return 0;
 }
@@ -175,11 +171,10 @@ void DisplayWindow(void) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   mat4 model = frustrum.GetTransform();
-  vec4 eye(0.0, -1.0, 0.0, 1.0);
+  vec4 eye(0.0, -1.0 - ctranslation.Y(), 0.0, 1.0);
   vec4 at(0.0, 0.0, 0.0, 1.0);
   vec4 up(0.0, 0.0, 1.0, 0.0);
-  mat4 cameraConMat = ctranslation.GetTransMatrix() * crotation.GetRotationMatrix();
-  mat4 view = LookAt(eye, at, up) * cameraConMat;
+  mat4 view = LookAt(eye, at, up) * crotation.GetRotationMatrix();
   mat4 modelview = view * model;
 
   proj = GetProjection(modelview);
@@ -311,7 +306,7 @@ void MWZoomIn() {
   GLfloat prevY = ctranslation.Y();
   ctranslation.UpdateTranslationY(ctranslation.Y() - 0.1);
   GLfloat newY = ctranslation.Y();
-  if (newY < -1.0) {
+  if (newY < 1.0) {
     ctranslation.UpdateTranslationY(prevY);
   }
 }
@@ -320,9 +315,6 @@ void MWZoomOut() {
   GLfloat prevY = ctranslation.Y();
   ctranslation.UpdateTranslationY(ctranslation.Y() + 0.1);
   GLfloat newY = ctranslation.Y();
-  if (newY > 1.0) {
-    ctranslation.UpdateTranslationY(prevY);
-  }
 }
 
 void MouseFunction(int button, int state, int x, int y) {
