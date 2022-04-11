@@ -11,6 +11,12 @@
 #include <Angel.h>
 #include <vector>
 
+Al::Coords::Coords() {
+  coords.push_back(0);
+  coords.push_back(0);
+  coords.push_back(0);
+}
+
 Al::Coords::Coords(GLfloat X, GLfloat Y, GLfloat Z) {
   coords.push_back(X);
   coords.push_back(Y);

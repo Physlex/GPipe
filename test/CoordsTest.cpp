@@ -1,3 +1,12 @@
+/**
+* Copyright 2022 Alexander Williams-Letondre
+*/
+
+/**
+* @author Alexander Williams-Letondre <a.williamsletondre@uleth.ca>
+* @date Spring 2020
+*/
+
 #include "Coords.h"
 #include <iostream>
 #include <string>
@@ -36,7 +45,7 @@ bool TestCoord() {
   if (static_cast<int>(c1->UpdateZCoord(2)) != static_cast<int>(14.5+2)) {
     return false;
   }
-  
+
   delete c1;
   return true;
 }

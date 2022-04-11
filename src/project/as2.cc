@@ -1,4 +1,5 @@
 #include "Transform.h"
+#include "Component.h"
 #include "Init.h"
 #include <Angel.h>
 #include <string>
@@ -334,7 +335,7 @@ void MWZoomOut() {
 }
 
 /**
-* Mouse 
+* Mouse
 **/
 void MouseFunction(int button, int state, int x, int y) {
   switch (button) {

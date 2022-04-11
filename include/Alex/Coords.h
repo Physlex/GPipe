@@ -18,6 +18,11 @@ namespace Al {
 class Coords {
  public:
   /**
+  * @brief default constructor
+  */
+  Coords();
+
+  /**
   * @brief Stores data about X, Y, and Z in a 3dim system
   * @details Constructor
   * @param[in] X, the x component of 3 dim, homo, world space.
