@@ -1,3 +1,6 @@
+# python
+_venv/
+
 # Prerequisites
 *.d
 
@@ -30,8 +33,3 @@
 *.exe
 *.out
 *.app
-
-#Folders
-bin/
-Questions/
-TODO/
